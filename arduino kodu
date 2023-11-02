@@ -1,0 +1,151 @@
+// 2 boyutlu tel şekillendirme makinesi
+// tel ileri sürülebilir, tele açı verilebilir veya tel ile çember oluşturulabilir.
+// tamamlanmamıştır
+int mesafe;
+int derece;
+int yaricap;
+String yon;
+String yaricapmerkez;
+#define dirPin 2 // yön
+#define stepPin 3 // adım
+#define stepsPerRevolution 200
+void setup() {
+  Serial.begin(9600); // Seri iletişim başlatılıyor, baud rate: 9600
+  pinMode(stepPin, OUTPUT);
+  pinMode(dirPin, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(dirPin, HIGH); // step motor yönü belirlenir
+  Serial.println(" ");
+  Serial.println(" ");
+  Serial.println("1. Teli ileri sürmek");
+  Serial.println("2. Açı girmek");
+  Serial.println("3. Çember oluşturmak");
+  Serial.println("Yapmak istediğiniz işlemin numarasını giriniz... "); // Kullanıcıya mesaj gönderiliyor
+  
+  while (Serial.available() == 0) {
+    // Seri veri yoksa bekle
+  }
+  
+  int receivedNumber = Serial.parseInt(); // Seri veriyi integer olarak oku
+    
+  if (receivedNumber == 1) {
+    // İlk komut buraya gelecek
+    Serial.println(" ");
+    Serial.println("Santimetre cinsinden telin ilerleyeceği mesafeyi giriniz...");
+    while (Serial.available() == 0) {
+    // Seri veri yoksa bekle
+    }
+    int mesafe = Serial.parseInt(); // Seri veriyi integer olarak oku
+    Serial.println(" ");
+    Serial.print("Tel ");
+    Serial.print(mesafe);
+    float r = 7; //ileri süren step motora takılacak olan silindirin yarıçapı (cm)
+    float mesafestep=(mesafe/(r*0.03));
+    Serial.print(" santimetre kadar ileri sürülmüştür.");
+    Serial.println(mesafestep);
+    for (int i = 0; i <= mesafestep; i++) {
+    // bu 4 satır motora 1 adım attırır
+    digitalWrite(stepPin, HIGH);
+    delayMicroseconds(2000);
+    digitalWrite(stepPin, LOW);
+    delayMicroseconds(2000);
+    }
+    
+  } else if (receivedNumber == 2) {
+    // İkinci komut buraya gelecek
+        Serial.println(" ");
+    Serial.println("Tel saat yönünde bükülecekse '+x', saat yönünün tersi yönde bükülecekse '-x' giriniz...");
+    while (Serial.available() == 0) {
+    // Seri veri yoksa bekle
+    }  
+    String yon = Serial.readString(); // Seri veriyi string olarak oku
+    if(yon=="+x")
+    {
+    Serial.println(" ");
+    Serial.print("Tel saat yönünde bükülecektir. Açı değerini derece cinsinden giriniz...  ");
+    while (Serial.available() == 0) {
+    // Seri veri yoksa bekle
+    }  
+    int aci = Serial.parseInt(); // Seri veriyi integer olarak oku
+    Serial.println(" ");
+    Serial.print("Tel ");
+    Serial.print(aci);
+    Serial.println(" derece kadar bükülmüştür.");
+    }
+    else if(yon=="-x")
+    {
+          Serial.println(" ");
+    Serial.print("Tel saat yönünün tersi yönde bükülecektir. Açı değerini derece cinsinden giriniz...  ");
+    while (Serial.available() == 0) {
+    // Seri veri yoksa bekle
+    }  
+    int aci = Serial.parseInt(); // Seri veriyi integer olarak oku
+    Serial.println(" ");
+    Serial.print("Tel ");
+    Serial.print(aci);
+    Serial.println(" derece kadar bükülmüştür.");
+    }
+  } else if (receivedNumber == 3) {
+    // Üçüncü komut buraya gelecek
+    Serial.println(" ");
+    Serial.println("Çemberin merkezi +x ekseni üzerinde olacaksa '+x', y ekseni üzerinde olacaksa '+y', -x ekseni üzerinde olacaksa '-x' giriniz...");
+    while (Serial.available() == 0) {
+    // Seri veri yoksa bekle
+    }
+    String yaricapmerkez = Serial.readString(); // Seri veriyi string olarak oku
+    if(yaricapmerkez == "+x")
+    {
+    Serial.println(" ");
+    Serial.print("Çember +x ekseni etrafında oluşturulacaktır. Yarıçap değerini santimetre cinsinden giriniz...  ");
+    while (Serial.available() == 0) {
+    // Seri veri yoksa bekle
+    }  
+    int yaricap = Serial.parseInt(); // Seri veriyi integer olarak oku
+    Serial.println(" ");
+    Serial.println(" ");
+    Serial.print(yaricapmerkez);
+    Serial.print(" ekseni etrafında ");
+    Serial.print(yaricap);
+    Serial.println(" santimetre yarıçaplı çember oluşturulmuştur.");
+    }
+    else if (yaricapmerkez == "+y") 
+    {
+    Serial.println(" ");
+    Serial.print("Çember +y ekseni etrafında oluşturulacaktır. Yarıçap değerini santimetre cinsinden giriniz...  ");
+    while (Serial.available() == 0) {
+    // Seri veri yoksa bekle
+    }  
+    int yaricap = Serial.parseInt(); // Seri veriyi integer olarak oku
+    Serial.println(" ");
+    Serial.println(" ");
+    Serial.print(yaricapmerkez);
+    Serial.print(" ekseni etrafında ");
+    Serial.print(yaricap);
+    Serial.println(" santimetre yarıçaplı çember oluşturulmuştur.");
+    }
+    else if (yaricapmerkez == "-x") 
+    {
+    Serial.println(" ");
+    Serial.print("Çember -x ekseni etrafında oluşturulacaktır. Yarıçap değerini santimetre cinsinden giriniz...  ");
+    while (Serial.available() == 0) {
+    // Seri veri yoksa bekle
+    }  
+    int yaricap = Serial.parseInt(); // Seri veriyi integer olarak oku
+    Serial.println(" ");
+    Serial.println(" ");
+    Serial.print(yaricapmerkez);
+    Serial.print(" ekseni etrafında ");
+    Serial.print(yaricap);
+    Serial.println(" santimetre yarıçaplı çember oluşturulmuştur.");
+    }
+  } else {
+    // Geçersiz komut durumu
+    Serial.println("Geçersiz komut. 1, 2 veya 3 giriniz.");
+  }
+  
+  while (Serial.available() > 0) {
+    Serial.read(); // Seri veriyi temizle
+  }
+}
